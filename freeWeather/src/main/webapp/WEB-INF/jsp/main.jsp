@@ -1,6 +1,9 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ include file="common.jsp"%>
 <html>
+	<script src="${pageContext.request.contextPath}/js/three/three.min.js"></script>
+  	<script type="text/javascript" src="${pageContext.request.contextPath}/js/three/stats.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/three/dat.gui.js"></script> 
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container-fluid">
