@@ -14,7 +14,7 @@ function myAjax(url,data,isAsync,sub)
 	bean.data=data;
 	bean.type="post";
 	bean.async=isAsync;
-	bean.success= myFunction;
+	bean.success= sub;
 	debugger;
 	$.ajax(bean);
 }

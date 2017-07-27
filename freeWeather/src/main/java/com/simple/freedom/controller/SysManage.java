@@ -1,10 +1,15 @@
 package com.simple.freedom.controller;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.simple.freedom.common.aop.BaseController;
@@ -34,5 +39,18 @@ public class SysManage extends BaseController{
 		//request.getSession().removeAttribute(SysVariable.USERSESSION);
 		request.getSession().invalidate();
 		response.sendRedirect(request.getContextPath()+"/login.do");
+	}
+	
+	@RequestMapping("/getCity")
+	@ResponseBody
+	public List<String> getCity(HttpServletRequest request,HttpServletResponse response,String proName)
+	{
+		File file=new File("C:/china/"+proName);
+		File[] files= file.listFiles();
+		List<String> list=new ArrayList<>();
+		for (File item : files) {
+			list.add(item.getName().replace(".txt", ""));
+		}
+		return list;
 	}
 }
