@@ -40,12 +40,12 @@ import wContour.Global.PointD;
 import wContour.Global.PolyLine;
 
 public class VectorUtil {
-	private static final VectorUtil vu = new VectorUtil();
+	private  final VectorUtil vu = new VectorUtil();
 	
-	private static Map<String,double[]> areaInfoMap;
-	private static Color[] color;
-	private static Double _maxValue = 500.0;
-	private static Double _minValue = 80.0;
+	private  Map<String,double[]> areaInfoMap;
+	private  Color[] color;
+	private  Double _maxValue = 500.0;
+	private  Double _minValue = 80.0;
 	String rootPath = SysVariable.areaAbout;
 	private String path = rootPath+"/areaInfo/";
 	// 内部区域划线路径
@@ -271,7 +271,7 @@ public class VectorUtil {
 	}
 
 	public static VectorUtil getInstance() {
-		return VectorUtil.vu;
+		return new VectorUtil();
 	}
 	
 	/**

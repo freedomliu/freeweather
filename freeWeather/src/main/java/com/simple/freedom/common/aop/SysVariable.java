@@ -13,5 +13,5 @@ public class SysVariable {
 	// 在线人数
 	public static final String USERNUM="usernum";
 	// 行政区划线及区域对应关系配置文件根目录
-	public static String areaAbout="C:\\wsConfig";
+	public static String areaAbout="C:\\fsConfig";
 }

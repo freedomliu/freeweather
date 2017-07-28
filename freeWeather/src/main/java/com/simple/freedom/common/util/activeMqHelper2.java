@@ -42,12 +42,17 @@ public class activeMqHelper2 {
 			@Override
 			public Message createMessage(Session session) throws JMSException {
 				// TODO Auto-generated method stub
-				ObjectMessage om=session.createObjectMessage(new User());
+				/*ObjectMessage om=session.createObjectMessage(new User());
+				om.setJMSReplyTo((Destination) applicationContext
+						.getBean("sessionAwareQueueBack"));
+				om.setJMSCorrelationID("121212121212");*/
+				return null;
+/*				ObjectMessage om=session.createObjectMessage(new User());
 				om.setJMSReplyTo((Destination) applicationContext
 						.getBean("sessionAwareQueueBack"));
 				om.setJMSCorrelationID("121212121212");
 				return om;
-			}
+*/			}
 
 		};
 		

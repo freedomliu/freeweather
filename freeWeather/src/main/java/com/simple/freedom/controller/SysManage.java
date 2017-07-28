@@ -7,16 +7,22 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.simple.freedom.common.aop.BaseController;
+import com.simple.freedom.common.aop.SysVariable;
+import com.simple.freedom.dao.ISysManageMapper;
 
 @Controller
 @RequestMapping("/sys")
 public class SysManage extends BaseController{
+	
+	@Autowired
+	ISysManageMapper smm;
 	
 	/**
 	 * 页面跳转
@@ -45,7 +51,7 @@ public class SysManage extends BaseController{
 	@ResponseBody
 	public List<String> getCity(HttpServletRequest request,HttpServletResponse response,String proName)
 	{
-		File file=new File("C:/china/"+proName);
+		File file=new File(SysVariable.areaAbout+"/"+proName);
 		File[] files= file.listFiles();
 		List<String> list=new ArrayList<>();
 		for (File item : files) {
