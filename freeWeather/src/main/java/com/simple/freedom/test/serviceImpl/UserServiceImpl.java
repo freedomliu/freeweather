@@ -9,7 +9,7 @@ import com.simple.freedom.test.service.IUserService;
 
 @Service
 public class UserServiceImpl implements IUserService{
-	@Autowired IUserMapper userMapper;
+	//@Autowired IUserMapper userMapper;
 	
 	@Override
 	public int deleteByPrimaryKey(Integer id) {
@@ -19,7 +19,7 @@ public class UserServiceImpl implements IUserService{
 
 	@Override
 	public int insert(User record) {
-		userMapper.insert(record);
+		//userMapper.insert(record);
 		return 0;
 	}
 
