@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simple.freedom.dao.IAreaSizeBeansMapper" >
+  <resultMap id="BaseResultMap" type="com.simple.freedom.beans.AreaSizeBean" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="areaName" property="areaName" jdbcType="VARCHAR" />
+    <result column="longitudeMin" property="longitudeMin" jdbcType="DOUBLE" />
+    <result column="longitudeMax" property="longitudeMax" jdbcType="DOUBLE" />
+    <result column="latitudeMin" property="latitudeMin" jdbcType="DOUBLE" />
+    <result column="latitudeMax" property="latitudeMax" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, areaName, longitudeMin, longitudeMax, latitudeMin, latitudeMax
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from areasize
+    where areaName = #{areaName,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from areasize
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.simple.freedom.beans.AreaSizeBean" >
+    insert into areasize (id, areaName, longitudeMin, 
+      longitudeMax, latitudeMin, latitudeMax
+      )
+    values (#{id,jdbcType=INTEGER}, #{areaName,jdbcType=VARCHAR}, #{longitudeMin,jdbcType=DOUBLE}, 
+      #{longitudeMax,jdbcType=DOUBLE}, #{latitudeMin,jdbcType=DOUBLE}, #{latitudeMax,jdbcType=DOUBLE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.simple.freedom.beans.AreaSizeBean" >
+    insert into areasize
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="areaName != null" >
+        areaName,
+      </if>
+      <if test="longitudeMin != null" >
+        longitudeMin,
+      </if>
+      <if test="longitudeMax != null" >
+        longitudeMax,
+      </if>
+      <if test="latitudeMin != null" >
+        latitudeMin,
+      </if>
+      <if test="latitudeMax != null" >
+        latitudeMax,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="areaName != null" >
+        #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="longitudeMin != null" >
+        #{longitudeMin,jdbcType=DOUBLE},
+      </if>
+      <if test="longitudeMax != null" >
+        #{longitudeMax,jdbcType=DOUBLE},
+      </if>
+      <if test="latitudeMin != null" >
+        #{latitudeMin,jdbcType=DOUBLE},
+      </if>
+      <if test="latitudeMax != null" >
+        #{latitudeMax,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.simple.freedom.beans.AreaSizeBean" >
+    update areasize
+    <set >
+      <if test="areaName != null" >
+        areaName = #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="longitudeMin != null" >
+        longitudeMin = #{longitudeMin,jdbcType=DOUBLE},
+      </if>
+      <if test="longitudeMax != null" >
+        longitudeMax = #{longitudeMax,jdbcType=DOUBLE},
+      </if>
+      <if test="latitudeMin != null" >
+        latitudeMin = #{latitudeMin,jdbcType=DOUBLE},
+      </if>
+      <if test="latitudeMax != null" >
+        latitudeMax = #{latitudeMax,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.simple.freedom.beans.AreaSizeBean" >
+    update areasize
+    set areaName = #{areaName,jdbcType=VARCHAR},
+      longitudeMin = #{longitudeMin,jdbcType=DOUBLE},
+      longitudeMax = #{longitudeMax,jdbcType=DOUBLE},
+      latitudeMin = #{latitudeMin,jdbcType=DOUBLE},
+      latitudeMax = #{latitudeMax,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

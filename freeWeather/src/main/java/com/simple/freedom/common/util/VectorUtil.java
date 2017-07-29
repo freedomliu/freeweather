@@ -24,18 +24,20 @@ import javax.imageio.ImageIO;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import wContour.Contour;
 import wContour.Interpolate;
-import wContour.Legend;
 import wContour.Global.Border;
-import wContour.Global.LPolygon;
-import wContour.Global.LegendPara;
 import wContour.Global.PointD;
 import wContour.Global.PolyLine;
 
+import com.simple.freedom.beans.AreaSizeBean;
 import com.simple.freedom.common.aop.SysVariable;
+import com.simple.freedom.dao.IAreaSizeBeansMapper;
 
+@Service
 public class VectorUtil {
 	String rootPath = SysVariable.areaAbout;
 	private String path = rootPath + "/areaInfo/";
@@ -65,11 +67,11 @@ public class VectorUtil {
 	private final int cols = 600;
 	private final double _undefData = -9999.0;
 
-	private double longitude_min = 70D;
-	private double longitude_max = 140D;
+	private double longitude_min;
+	private double longitude_max;
 
-	private double latitude_min = 15D;
-	private double latitude_max = 55D;
+	private double latitude_min;
+	private double latitude_max;
 
 	private double _minX = 0;
 	private double _minY = 0;
@@ -86,6 +88,9 @@ public class VectorUtil {
 	private boolean showLegend = false;
 	private String title = null;
 
+	@Autowired
+	IAreaSizeBeansMapper areaSizeBeansMapper;
+	
 	public String getBufferedImageByDataList(List<double[]> list,
 			JSONObject configFile, String title, String mypath,
 			List<String> colorList, List<String> valueList) {
@@ -95,7 +100,7 @@ public class VectorUtil {
 		this.configFile = configFile;
 		_provLines = new ArrayList<List<PointD>>();
 		_clipLines = new ArrayList<List<PointD>>();
-		String[] names = new String[] { "滨州" };
+		String[] names = new String[] { "山东" };
 		for (String name : names) {
 			// 行政边界内部区域
 			File aFile = new File(pathAreaLine + name + "_new.csv");
@@ -113,8 +118,6 @@ public class VectorUtil {
 		double[] values = this.loadParameter();
 
 		try {
-			// 根据区域名称设置最大和最小经纬度
-			this.setMaxAndMin_AreaInfo(names);
 			for (String name : names) {
 				// 获取底图信息
 				File file = new File(path + name + ".csv");
@@ -193,27 +196,12 @@ public class VectorUtil {
 		return new VectorUtil();
 	}
 
-	/**
-	 * @Title: setMaxAndMin_AreaInfo
-	 * @Description: 根据站点名称,设置最大最小的经度及纬度
-	 * @param @param name 参数
-	 * @return void 返回类型
-	 * @throws
-	 * @author asus
-	 */
-	private void setMaxAndMin_AreaInfo(String[] names) {
-		// 针对滨州接口
-		longitude_min = 116.7;
-		longitude_max = 118.74;
-		latitude_min = 36.6289800002269;
-		latitude_max = 38.419;
-	}
-
 	private void parseListData(List<double[]> list) {
 
 		int length = list.size();
 
 		_discreteData = new double[3][list.size()];
+		
 		for (int i = 0; i < length; i++) {
 			double[] d = list.get(i);
 			_discreteData[0][i] = d[0];
@@ -278,37 +266,109 @@ public class VectorUtil {
 
 	public void ReadMapFile_WMP1(File aFile, String type)
 			throws FileNotFoundException, IOException {
-		BufferedReader br = new BufferedReader(new FileReader(aFile));
-		String aLine;
-		String shapeType;
-		String[] dataArray;
-		int shapeNum;
-		int i, pNum;
-		PointD aPoint;
+		
+		AreaSizeBean area= areaSizeBeansMapper.selectByPrimaryKey("山东");
+		if(area!=null)
+		{
+			longitude_min = area.getLongitudeMin();
+			longitude_max = area.getLongitudeMax();
+			latitude_min = area.getLatitudeMin();
+			latitude_max = area.getLatitudeMax();
+			
+			BufferedReader br = new BufferedReader(new FileReader(aFile));
+			String aLine;
+			String shapeType;
+			String[] dataArray;
+			int shapeNum;
+			int i, pNum;
+			PointD aPoint;
 
-		shapeType = br.readLine().trim();
-		shapeNum = Integer.parseInt(br.readLine());
-		if (shapeType.equals(type)) {
-			for (int s = 0; s < shapeNum; s++) {
-				String temp = br.readLine();
-				if (temp == null) {
-					continue;
+			shapeType = br.readLine().trim();
+			shapeNum = Integer.parseInt(br.readLine());
+			if (shapeType.equals(type)) {
+				for (int s = 0; s < shapeNum; s++) {
+					String temp = br.readLine();
+					if (temp == null) {
+						continue;
+					}
+					pNum = Integer.parseInt(temp);
+					List<PointD> cLine = new ArrayList<PointD>();
+					for (i = 0; i < pNum; i++) {
+						aLine = br.readLine();
+						dataArray = aLine.split(",");
+						aPoint = new PointD();
+						aPoint.X = Double.parseDouble(dataArray[0]);
+						aPoint.Y = Double.parseDouble(dataArray[1]);
+						cLine.add(aPoint);
+					}
+					_provLines.add(cLine);
 				}
-				pNum = Integer.parseInt(temp);
-				List<PointD> cLine = new ArrayList<PointD>();
-				for (i = 0; i < pNum; i++) {
-					aLine = br.readLine();
-					dataArray = aLine.split(",");
-					aPoint = new PointD();
-					aPoint.X = Double.parseDouble(dataArray[0]);
-					aPoint.Y = Double.parseDouble(dataArray[1]);
-					cLine.add(aPoint);
-				}
-				_provLines.add(cLine);
 			}
-		}
 
-		br.close();
+			br.close();
+		}
+		else
+		{
+			BufferedReader br = new BufferedReader(new FileReader(aFile));
+			String aLine;
+			String shapeType;
+			String[] dataArray;
+			int shapeNum;
+			int i, pNum;
+			PointD aPoint;
+
+			shapeType = br.readLine().trim();
+			shapeNum = Integer.parseInt(br.readLine());
+			if (shapeType.equals(type)) {
+				for (int s = 0; s < shapeNum; s++) {
+					String temp = br.readLine();
+					if (temp == null) {
+						continue;
+					}
+					pNum = Integer.parseInt(temp);
+					List<PointD> cLine = new ArrayList<PointD>();
+					for (i = 0; i < pNum; i++) {
+						aLine = br.readLine();
+						dataArray = aLine.split(",");
+						aPoint = new PointD();
+						aPoint.X = Double.parseDouble(dataArray[0]);
+						aPoint.Y = Double.parseDouble(dataArray[1]);
+						if(s==0&&i==0)
+						{
+							longitude_max=longitude_min = aPoint.X;
+							latitude_max=latitude_min =aPoint.Y ;
+						}
+						if(aPoint.X<longitude_min)
+						{
+							longitude_min=aPoint.X;
+						}
+						if(aPoint.X>longitude_max)
+						{
+							longitude_max=aPoint.X;
+						}
+						if(aPoint.Y<latitude_min)
+						{
+							latitude_min=aPoint.Y;
+						}
+						if(aPoint.Y>latitude_max)
+						{
+							latitude_max=aPoint.Y;
+						}
+						cLine.add(aPoint);
+					}
+					_provLines.add(cLine);
+				}
+			}
+			AreaSizeBean areaSize=new AreaSizeBean();
+			areaSize.setAreaName("山东");
+			areaSize.setLatitudeMax(latitude_max);
+			areaSize.setLatitudeMin(latitude_min);
+			areaSize.setLongitudeMax(longitude_max);
+			areaSize.setLongitudeMin(longitude_min);
+			areaSizeBeansMapper.insertSelective(areaSize);
+			br.close();	
+		}
+	
 	}
 
 	/**

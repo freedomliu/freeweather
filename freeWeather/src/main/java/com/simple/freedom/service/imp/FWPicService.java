@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.simple.freedom.common.util.VectorUtil;
 import com.simple.freedom.service.IFWPicService;
 @Service
 public class FWPicService implements IFWPicService{	
+	@Autowired
+	VectorUtil vectorUtil;
+	
 	public String getIDWinfor(String value,String colorString,String title,String path) throws Exception {
 		String[] infor= value.split("b");
 		List<double[]> list = new ArrayList<double[]>();
@@ -57,7 +61,6 @@ public class FWPicService implements IFWPicService{
 	    {
 	    	strTemp=strTemp+item+";";
 	    }
-		VectorUtil vectorUtil=VectorUtil.getInstance();
 		String configValue=strTemp.substring(0, strTemp.toString().length()-1).replace("~;","").replace(";~","");
 		String jString="{";
 	    jString=jString+"\"value\":\""+configValue+"\",";
