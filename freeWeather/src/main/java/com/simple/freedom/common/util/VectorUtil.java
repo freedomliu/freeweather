@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import javax.imageio.ImageIO;
 
@@ -63,8 +64,8 @@ public class VectorUtil {
 	private double[] _X;
 	private double[] _Y;
 
-	private final int rows = 600;
-	private final int cols = 600;
+	private final int rows = 800;
+	private final int cols = 800;
 	private final double _undefData = -9999.0;
 
 	private double longitude_min;
@@ -88,19 +89,29 @@ public class VectorUtil {
 	private boolean showLegend = false;
 	private String title = null;
 
+	private FWPicWebSocket webSocket;
 	@Autowired
 	IAreaSizeBeansMapper areaSizeBeansMapper;
 	
-	public String getBufferedImageByDataList(List<double[]> list,
+	public String getBufferedImageByDataList(String sessionId,List<double[]> list,
 			JSONObject configFile, String title, String mypath,
 			List<String> colorList, List<String> valueList) {
+		CopyOnWriteArraySet<FWPicWebSocket> set=FWPicWebSocket.webSocketSet;
+		for(FWPicWebSocket item :set)
+		{
+			if(item.getSession().getId().equals(sessionId))
+			{
+				webSocket=item;
+			}
+		}
+		
 		this.title = title;
 		Format format = new SimpleDateFormat("yyyyMMddhhmmss");
 		String picName = format.format(new Date());
 		this.configFile = configFile;
 		_provLines = new ArrayList<List<PointD>>();
 		_clipLines = new ArrayList<List<PointD>>();
-		String[] names = new String[] { "山东" };
+		String[] names = new String[] { "滨州" };
 		for (String name : names) {
 			// 行政边界内部区域
 			File aFile = new File(pathAreaLine + name + "_new.csv");
@@ -114,6 +125,7 @@ public class VectorUtil {
 				//clearInfor();
 			}
 		}
+		sendBar("10");
 		// 色差区间的数组
 		double[] values = this.loadParameter();
 
@@ -136,6 +148,7 @@ public class VectorUtil {
 			_gridData = new double[rows][cols];
 			_gridData = Interpolate.Interpolation_IDW_Neighbor(_discreteData,
 					_X, _Y, 8, _undefData);
+			sendBar("30");
 			// 差值分析
 			this.getInterpolation(values);
 			// 绘制差值分析图
@@ -178,11 +191,11 @@ public class VectorUtil {
 		String[] values;
 		try {
 			values = configFile.getString("value").toString().split(";");
-
-			double[] dArr = new double[values.length];
+			double[] dArr = new double[values.length+1];
 			for (int i = 0; i < values.length; i++) {
 				dArr[i] = Double.valueOf(values[i]);
 			}
+			dArr[values.length]=dArr[values.length-1]+1;
 			return dArr;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -267,13 +280,13 @@ public class VectorUtil {
 	public void ReadMapFile_WMP1(File aFile, String type)
 			throws FileNotFoundException, IOException {
 		
-		AreaSizeBean area= areaSizeBeansMapper.selectByPrimaryKey("山东");
+		AreaSizeBean area= areaSizeBeansMapper.selectByPrimaryKey("滨州");
 		if(area!=null)
 		{
-			longitude_min = area.getLongitudeMin();
+			longitude_min = area.getLongitudeMin()-0.3;
 			longitude_max = area.getLongitudeMax();
 			latitude_min = area.getLatitudeMin();
-			latitude_max = area.getLatitudeMax();
+			latitude_max = area.getLatitudeMax()+0.2;
 			
 			BufferedReader br = new BufferedReader(new FileReader(aFile));
 			String aLine;
@@ -360,7 +373,7 @@ public class VectorUtil {
 				}
 			}
 			AreaSizeBean areaSize=new AreaSizeBean();
-			areaSize.setAreaName("山东");
+			areaSize.setAreaName("滨州");
 			areaSize.setLatitudeMax(latitude_max);
 			areaSize.setLatitudeMin(latitude_min);
 			areaSize.setLongitudeMax(longitude_max);
@@ -380,7 +393,7 @@ public class VectorUtil {
 	 * @author asus
 	 */
 	private void getInterpolation(double[] values) {
-
+		sendBar("35");
 		this.SetContourValues(values);
 		// 描绘多边形底线
 		this.TracingContourLines();
@@ -389,6 +402,7 @@ public class VectorUtil {
 		// 剪切线,多边形的边界线
 		this.ClipLines();
 		// 描绘多边形
+		sendBar("34");
 		this.TracingPolygons();
 		// 剪切多边形每一块区域
 		this.ClipPolygons();
@@ -495,22 +509,26 @@ public class VectorUtil {
 	private void drawPolygon(Graphics2D g, wContour.Global.Polygon aPolygon,
 			List<String> values, boolean isHighlight) {
 		PointD aPoint;
-		String aValue = String.valueOf(aPolygon.LowValue);
-		int idx = values.indexOf(aValue) + 1;
-		Color aColor = Color.black;
-		if (isHighlight) {
+		String aValue = String.valueOf(aPolygon.HighValue);
+		
+		int idx = values.indexOf(aValue);
+		Color aColor = _colors[idx];
+		System.out.println(aValue+"|"+idx);
+/*		if (isHighlight) {
 			aColor = Color.green;
 		} else {
 			if (aPolygon.IsHighCenter) {
 				aColor = _colors[idx];
 				for (int j = 1; j < _colors.length; j++) {
 					if (aColor.getRGB() == _colors[j].getRGB()) {
-						aColor = _colors[j - 1];
+						aColor = _colors[j];
 					}
 				}
 			}
-		}
-
+		}*/
+		
+		
+		
 		int len = aPolygon.OutLine.PointList.size();
 		GeneralPath drawPolygon = new GeneralPath(GeneralPath.WIND_EVEN_ODD,
 				len);
@@ -559,7 +577,7 @@ public class VectorUtil {
 		int j = 0;
 		for (int i = listColor.size() - 1; i > -1; i--) {
 			j++;
-			Rectangle2D rectangle = new Rectangle2D.Float(100, height - 30 - 30
+			Rectangle2D rectangle = new Rectangle2D.Float(2, height - 30 - 30
 					* j, 10, 30);
 			Color color = new Color(Integer.parseInt(listColor.get(i), 16));
 			g.setColor(color);
@@ -573,20 +591,20 @@ public class VectorUtil {
 				if (!listValue.get(i + 1).equals("~")) {
 					g.drawString(listValue.get(i + 1), 110, height - 30 * j);
 				}
-				g.drawString(listValue.get(i), 110, height - 30 - 30 * j);
+				g.drawString(listValue.get(i), 10, height - 30 - 30 * j);
 			} else if (i == 0)// 最后一次循环
 			{
 				if (!listValue.get(i).equals("~")) {
 					Font font = new Font("宋体", Font.BOLD, 15);
 					g.setColor(Color.BLACK);
 					g.setFont(font);
-					g.drawString(listValue.get(i), 110, height - 30 - 30 * j);
+					g.drawString(listValue.get(i), 10, height - 30 - 30 * j);
 				}
 			} else {
 				Font font = new Font("宋体", Font.BOLD, 15);
 				g.setColor(Color.BLACK);
 				g.setFont(font);
-				g.drawString(listValue.get(i), 110, height - 30 - 30 * j);
+				g.drawString(listValue.get(i), 10, height - 30 - 30 * j);
 			}
 		}
 	}
@@ -597,8 +615,20 @@ public class VectorUtil {
 		g.setColor(Color.BLACK);
 		g.setFont(font);
 		int wd = (width - title.length()) / 2;
-		g.drawString(title, wd, height / 16);
-		int[] point = ToScreen(Double.valueOf(118.12), Double.valueOf(37.12));
+		g.drawString(title, wd, 31);
+		
+		
+		
+		font = new Font("宋体", Font.BOLD, 10);
+		g.setFont(font);
+		for(int i=0;i<_discreteData[0].length;i++)
+		{
+			int[] point = ToScreen(Double.valueOf(_discreteData[0][i]), Double.valueOf(_discreteData[1][i]));
+			g.drawString(_discreteData[2][i]+"", point[0], point[1]);
+		}
+		
+		
+		/*int[] point = ToScreen(Double.valueOf(118.12), Double.valueOf(37.12));
 		g.drawString("博兴县", point[0], point[1]);
 		point = ToScreen(Double.valueOf(117.48), Double.valueOf(37.37));
 		g.drawString("惠民县", point[0], point[1]);
@@ -611,7 +641,7 @@ public class VectorUtil {
 		point = ToScreen(Double.valueOf(117.65), Double.valueOf(36.89));
 		g.drawString("邹平县", point[0], point[1]);
 		point = ToScreen(Double.valueOf(117.55), Double.valueOf(37.61));
-		g.drawString("阳信县", point[0], point[1]);
+		g.drawString("阳信县", point[0], point[1]);*/
 	}
 
 	// 绘制内部区域
@@ -633,6 +663,16 @@ public class VectorUtil {
 				g.drawPolyline(xPoints, yPoints, len);
 
 			}
+		}
+	}
+	
+	private void sendBar(String barNum)
+	{
+		try {
+			webSocket.sendMessage(barNum);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

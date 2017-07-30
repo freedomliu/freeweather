@@ -14,7 +14,7 @@ public class FWPicService implements IFWPicService{
 	@Autowired
 	VectorUtil vectorUtil;
 	
-	public String getIDWinfor(String value,String colorString,String title,String path) throws Exception {
+	public String getIDWinfor(String value,String colorString,String title,String path,String sessionId) throws Exception {
 		String[] infor= value.split("b");
 		List<double[]> list = new ArrayList<double[]>();
 		for(int i=0;i<infor.length;i++)
@@ -66,7 +66,7 @@ public class FWPicService implements IFWPicService{
 	    jString=jString+"\"value\":\""+configValue+"\",";
 		jString=jString+"\"colorString\":\""+colorStringTemp+"\"}";
 		org.json.JSONObject jb=new org.json.JSONObject(jString);
-		String pathStr= vectorUtil.getBufferedImageByDataList(list,jb,title,path,Arrays.asList(colorStringTemp.replaceAll("#", "").split(";")),Arrays.asList(strTemp.split(";")));
+		String pathStr= vectorUtil.getBufferedImageByDataList(sessionId,list,jb,title,path,Arrays.asList(colorStringTemp.replaceAll("#", "").split(";")),Arrays.asList(strTemp.split(";")));
 	    return pathStr;
 	}
 }

@@ -3,10 +3,10 @@
 <html>
 <body>
 <div class="row" style="margin-left:10px;margin-right:10px;">
-	<div class="col-sm-6 col-md-9">
+	<div class="col-sm-6 col-md-8">
 		<textarea  class="form-control" rows="8" id="zb" placeholder="117.62c37.75c356b117.57c37.65c238.3b117.53c37.48c251.3b118.13c37.68c312.1b118.02c37.37c298.9b118.15c37.15c139.3b117.73c36.87c139.1b117.901944444c38.166111111c220.2b117.366944443c37.583055554c306b117.486666666c37.22361111c205.5b117.579999999c37.361944444c458.3b117.733888888c37.296944444c297b118.208888888c37.343055555c99.7b118.288055555c37.2c105b118.261944444c37.03611111c147.6b117.453888888c36.978888888c70b117.691944444c37.018055554c86.7b117.879999999c36.923055554c60.2b118.071944443c37.283055554c183.4b117.848055555c37.506944444c354.2b118.081944443c37.483888888c185.2b118.014166666c37.505833333c207.2b117.88361111c37.605833333c234.3b118.2c37.9c292.4b118.05c38.04c423.8b117.679166666c37.993055555c223.5b117.635555555c37.910833333c352.7b117.826388888c37.884444444c307.3b117.916111111c38.053888888c177.8b117.98111111c38.119999999c403.4b117.426388888c37.62611111c322.4b117.666944443c37.65c435.7b117.75c37.583055554c310b117.519444443c37.589166666c402.2b117.366944443c37.516666666c339.4b117.616944443c37.6c353.4b117.500277777c37.527777777c122.8b117.636944444c37.418888888c241.8b117.47611111c37.41c301.8b117.738055555c37.328888888c555b117.423888888c37.480277777c176.1b117.68111111c37.293055555c332b117.578888888c37.553888888c424.9b117.462222222c37.347499999c457.1b117.535833333c37.183333333c214.1b117.715c37.5025c282.5b117.593888888c37.263055555c23.4b118.19361111c37.099166666c158.8b118.119999999c37.215c182.2b118.293888888c37.106111111c107.4b118.218055554c37.23611111c199.1b118.269999999c37.26c271.8b118.139999999c37.108888888c259.2b118.191944444c37.02111111c170.6b117.743888888c36.858888888c80.3b117.623888888c36.928055554c150.6b117.644722221c37.034444444c108.8b117.823888888c37c85.4b117.389999999c37.026944443c79.9b117.489999999c37.091944444c108.3b117.613055555c36.866944443c137.2b117.77111111c36.713055555c89.9b117.79611111c36.818888888c90.8b117.703888888c36.946944444c151.7b117.68611111c36.89111111c165.7b117.818888888c36.881944443c116b117.88611111c37.411944444c418.3b117.983333333c37.467777777c305b117.992777777c37.253888888c295.2b117.876944443c37.36c468.3b118.085555555c37.398333333c269.4b117.951666666c37.391944444c332.8b118.116944443c37.7c306.4b117.783055554c37.683055554c355.3b117.966944443c37.616944443c291.5b118.283055554c37.816944443c188.9b118.216944443c37.683055554c304.1b117.966944443c37.783055554c321.1b117.702777777c37.729722221c339b117.853888888c37.801111111c373.8b117.703055555c37.831388888c327.4b117.596944444c38.051944444c268.6b117.736666666c37.967222221c281.1b117.713611111c38.048888888c252.8b117.838888888c37.356944444c509.1b117.911111111c37.916388888c364"></textarea>
 	</div>
-<div class="col-sm-6 col-md-3">
+<div class="col-sm-6 col-md-4">
 		<div class="input-group input-group-lg">
 		<select class="form-control" style="width: 100px;">
 			<option>中国</option>
@@ -68,10 +68,10 @@
 	</div>
 	<div class="col-sm-12 col-md-12" style="margin-top: 10px">
 	<div class="progress progress-striped active">
-		<div class="progress-bar progress-bar-success" role="progressbar"
-			 aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-			 style="width: 40%;">
-			<span class="sr-only">40% 完成</span>
+		<div class="progress-bar progress-bar-success" role="progressbar" id="proBar"
+			 aria-valuemin="0" aria-valuemax="100"
+			 style="width: 10%;">
+<!-- 			<span class="sr-only">40% 完成</span> -->
 		</div>
 	</div>
 	<img id="sbt">
@@ -102,6 +102,70 @@
 </body>
 </html>
 <script>
+var websocket = null;
+var sessionId=null;
+var isFirst=true;
+//判断当前浏览器是否支持WebSocket
+debugger;
+if ('WebSocket' in window) {
+    websocket = new WebSocket("ws://localhost:80/freeWeather/FWPicWebSocket");
+}
+else {
+    alert('当前浏览器 Not support websocket')
+}
+
+//连接发生错误的回调方法
+websocket.onerror = function () {
+    setMessageInnerHTML("WebSocket连接发生错误");
+};
+
+//连接成功建立的回调方法
+websocket.onopen = function () {
+    setMessageInnerHTML("WebSocket连接成功");
+}
+
+//接收到消息的回调方法
+websocket.onmessage = function (event) {
+	debugger;
+	if(isFirst)
+	{
+		sessionId=event.data;
+	}
+	else
+	{
+		document.getElementById("proBar").style.width=event.data;
+	}
+    //setMessageInnerHTML(event.data);
+}
+
+//连接关闭的回调方法
+websocket.onclose = function () {
+    setMessageInnerHTML("WebSocket连接关闭");
+}
+
+//监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+window.onbeforeunload = function () {
+    closeWebSocket();
+}
+
+//将消息显示在网页上
+function setMessageInnerHTML(innerHTML) {
+    document.getElementById('message').innerHTML += innerHTML + '<br/>';
+}
+
+//关闭WebSocket连接
+function closeWebSocket() {
+    websocket.close();
+}
+
+//发送消息
+function send() {
+    var message = document.getElementById('text').value;
+    websocket.send(message);
+}
+
+
+
 function setCity(value)
 {
 	debugger;
@@ -120,7 +184,7 @@ function setCity(value)
 function getPic()
 {
 	debugger;
-	var param={"title":$("#title").val(),"zb":$("#zb").val(),"legend":$("#legend").val(),"pro":$("#pro").val(),"city":$("#city").val()};
+	var param={"sessionId":sessionId,"title":$("#title").val(),"zb":$("#zb").val(),"legend":$("#legend").val(),"pro":$("#pro").val(),"city":$("#city").val()};
 
 	var sub = function(data) {
 		alert(data.substring(1,data.length-1));
