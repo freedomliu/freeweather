@@ -31,7 +31,7 @@ public class FWPic extends BaseController{
 			String title= request.getParameter("title");
 			String sessionId= request.getParameter("sessionId");
 			String path= request.getRealPath("/");
-			String strUrl=fwPic.getIDWinfor(value,color,title,path,sessionId);
+			String strUrl=fwPic.getIDWinfor(value,color,title,path);
 			if(strUrl.equals(""))
 			{
 				url="暂无生成的图片";

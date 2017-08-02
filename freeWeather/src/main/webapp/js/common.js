@@ -6,7 +6,7 @@ var sub = function(data) {
 	$("#formUser").submit();
 }
 
-function myAjax(url,data,isAsync,sub)
+function myAjax(url,data,isAsync,sub,error)
 {
 	debugger;
 	var bean=new Object();
@@ -15,6 +15,7 @@ function myAjax(url,data,isAsync,sub)
 	bean.type="post";
 	bean.async=isAsync;
 	bean.success= sub;
+	bean.error= error;
 	debugger;
 	$.ajax(bean);
 }
