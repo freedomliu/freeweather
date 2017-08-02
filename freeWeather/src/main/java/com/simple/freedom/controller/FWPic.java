@@ -43,7 +43,6 @@ public class FWPic extends BaseController{
 			logger.error(this.getClass() + ":" + e);
 			url="http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/"+"error.png";
 		}
-		System.out.println(url);
 		return url;
 	}
 }

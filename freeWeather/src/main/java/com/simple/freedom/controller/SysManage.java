@@ -51,12 +51,7 @@ public class SysManage extends BaseController{
 	@ResponseBody
 	public List<String> getCity(HttpServletRequest request,HttpServletResponse response,String proName)
 	{
-		File file=new File(SysVariable.areaAbout+"/"+proName);
-		File[] files= file.listFiles();
-		List<String> list=new ArrayList<>();
-		for (File item : files) {
-			list.add(item.getName().replace(".txt", ""));
-		}
+		List<String> list=smm.selectCity(proName);
 		return list;
 	}
 }

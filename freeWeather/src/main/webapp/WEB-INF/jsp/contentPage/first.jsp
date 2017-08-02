@@ -11,7 +11,7 @@
 		<select class="form-control" style="width: 100px;">
 			<option>中国</option>
 		</select> 
-		<select class="form-control" id="pro" onchange="setCity(this.value)" style="width:  100px;">
+		<select class="form-control" id="pro" onchange="setCity(this.value)" style="width:auto;">
 			<option value="北京">北京</option>
 			<option value="上海">上海</option>
 			<option value="天津">天津</option>
@@ -44,7 +44,7 @@
 			<option value="云南">云南</option>
 			<option value="浙江">浙江</option>
 		</select> 
-		<select class="form-control" id="city" style="width: 100px;">
+		<select class="form-control" id="city" style="width:auto;">
 			<option value=""></option>
 		</select>
 	</div>
@@ -58,7 +58,7 @@
     </div> -->
     <div class="input-group input-group-lg">
             <span class="input-group-addon" style="width: 100px">图例</span>
-            <input type="text" class="form-control" id="legend" placeholder="~c240cFFB6C1b240c244cDC143Cb244c248c4B0082b248c250c7B68EEb250c254c1E90FFb254c258c00BFFFb258c265c00FFFFb265c270c7FFFAAb270c275c3CB371b275c280cADFF2Fb280c285cA9A9A9b285c~c000000">
+            <input type="text" class="form-control" id="legend" placeholder="~c240cFFB6C1b240c244cDC143Cb244c248c4B0082b248c250c7B68EEb250c254c1E90FFb254c258c00BFFFb258c265c00FFFFb265c270c7FFFAAb270c275c3CB371b275c280cADFF2Fb280c285cA9A9A9b285c~c8B008B">
     </div>
 	<div class="btn-group" style="float: right;">
 		<button type="button" class="btn btn-primary" data-toggle="modal" onclick="showModal()">校验</button>
@@ -70,11 +70,14 @@
 	<div class="progress progress-striped active">
 		<div class="progress-bar progress-bar-success" role="progressbar" id="proBar"
 			 aria-valuemin="0" aria-valuemax="100"
-			 style="width: 10%;">
-<!-- 			<span class="sr-only">40% 完成</span> -->
+			 style="width: 0%;">
 		</div>
 	</div>
-	<img id="sbt">
+	<div style="width: 100%;text-align: c">
+	<div style="width: 100%;text-align: center;">
+	<img id="sbt" >
+	</div>
+	</div>
 	</div>
 </div>
 
@@ -130,10 +133,11 @@ websocket.onmessage = function (event) {
 	if(isFirst)
 	{
 		sessionId=event.data;
+		isFirst=false;
 	}
 	else
 	{
-		document.getElementById("proBar").style.width=event.data;
+		document.getElementById("proBar").style.width=event.data+"%";
 	}
     //setMessageInnerHTML(event.data);
 }
@@ -150,7 +154,7 @@ window.onbeforeunload = function () {
 
 //将消息显示在网页上
 function setMessageInnerHTML(innerHTML) {
-    document.getElementById('message').innerHTML += innerHTML + '<br/>';
+	alert(innerHTML);
 }
 
 //关闭WebSocket连接
@@ -164,7 +168,7 @@ function send() {
     websocket.send(message);
 }
 
-
+setCity("北京");
 
 function setCity(value)
 {
@@ -187,7 +191,6 @@ function getPic()
 	var param={"sessionId":sessionId,"title":$("#title").val(),"zb":$("#zb").val(),"legend":$("#legend").val(),"pro":$("#pro").val(),"city":$("#city").val()};
 
 	var sub = function(data) {
-		alert(data.substring(1,data.length-1));
 		$("#sbt").attr('src',data.substring(1,data.length-1)); 
 	}
 	myAjax("${pageContext.request.contextPath}/getFWPic?",param,true,sub);

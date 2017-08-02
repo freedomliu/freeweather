@@ -36,6 +36,7 @@ public class FWPicWebSocket {
 		this.session = session;
 		this.sendMessage(session.getId());
 		webSocketSet.add(this);     //加入set中
+		System.out.println("有新连接加入！当前在线人数为" + webSocketSet.size());
 	}
 
 	/**
@@ -44,6 +45,7 @@ public class FWPicWebSocket {
 	@OnClose
 	public void onClose(){
 		webSocketSet.remove(this);  //从set中删除
+		System.out.println("有一连接关闭！当前在线人数为" + webSocketSet.size());
 	}
 
 	/**

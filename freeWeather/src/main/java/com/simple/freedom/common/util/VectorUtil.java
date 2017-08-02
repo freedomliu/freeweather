@@ -111,7 +111,7 @@ public class VectorUtil {
 		this.configFile = configFile;
 		_provLines = new ArrayList<List<PointD>>();
 		_clipLines = new ArrayList<List<PointD>>();
-		String[] names = new String[] { "滨州" };
+		String[] names = new String[] { "山东" };
 		for (String name : names) {
 			// 行政边界内部区域
 			File aFile = new File(pathAreaLine + name + "_new.csv");
@@ -156,6 +156,7 @@ public class VectorUtil {
 			// 保存
 			ImageIO.write(iamge, "PNG", new File(mypath + "/" + picName
 					+ ".png"));
+			sendBar("100");
 			System.out.println(mypath + "/" + picName + ".png");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -179,11 +180,13 @@ public class VectorUtil {
 		g2.setStroke(new BasicStroke(1));
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
-
+		sendBar("75");
 		this.drawContourPolygons(g2);
 		this.drawLegend(g2, colorList, valueList);
 		// 绘制内部线条
+		sendBar("80");
 		this.drawProvLines(g2);
+		sendBar("85");
 		this.darwCityName(g2);
 	}
 
@@ -280,7 +283,7 @@ public class VectorUtil {
 	public void ReadMapFile_WMP1(File aFile, String type)
 			throws FileNotFoundException, IOException {
 		
-		AreaSizeBean area= areaSizeBeansMapper.selectByPrimaryKey("滨州");
+		AreaSizeBean area= areaSizeBeansMapper.selectByPrimaryKey("山东");
 		if(area!=null)
 		{
 			longitude_min = area.getLongitudeMin()-0.3;
@@ -373,7 +376,7 @@ public class VectorUtil {
 				}
 			}
 			AreaSizeBean areaSize=new AreaSizeBean();
-			areaSize.setAreaName("滨州");
+			areaSize.setAreaName("山东");
 			areaSize.setLatitudeMax(latitude_max);
 			areaSize.setLatitudeMin(latitude_min);
 			areaSize.setLongitudeMax(longitude_max);
@@ -393,19 +396,24 @@ public class VectorUtil {
 	 * @author asus
 	 */
 	private void getInterpolation(double[] values) {
-		sendBar("35");
+		sendBar("40");
 		this.SetContourValues(values);
+		sendBar("45");
 		// 描绘多边形底线
 		this.TracingContourLines();
 		// 平滑线
+		sendBar("50");
 		this.SmoothLines();
 		// 剪切线,多边形的边界线
+		sendBar("55");
 		this.ClipLines();
 		// 描绘多边形
-		sendBar("34");
+		sendBar("60");
 		this.TracingPolygons();
 		// 剪切多边形每一块区域
+		sendBar("65");
 		this.ClipPolygons();
+		sendBar("70");
 		// 设置比例
 		this.SetCoordinate(longitude_min, longitude_max, latitude_min,
 				latitude_max);
@@ -513,22 +521,6 @@ public class VectorUtil {
 		
 		int idx = values.indexOf(aValue);
 		Color aColor = _colors[idx];
-		System.out.println(aValue+"|"+idx);
-/*		if (isHighlight) {
-			aColor = Color.green;
-		} else {
-			if (aPolygon.IsHighCenter) {
-				aColor = _colors[idx];
-				for (int j = 1; j < _colors.length; j++) {
-					if (aColor.getRGB() == _colors[j].getRGB()) {
-						aColor = _colors[j];
-					}
-				}
-			}
-		}*/
-		
-		
-		
 		int len = aPolygon.OutLine.PointList.size();
 		GeneralPath drawPolygon = new GeneralPath(GeneralPath.WIND_EVEN_ODD,
 				len);

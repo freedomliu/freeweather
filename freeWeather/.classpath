@@ -30,5 +30,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/myLibrayr"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/org.json.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/wContour.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
