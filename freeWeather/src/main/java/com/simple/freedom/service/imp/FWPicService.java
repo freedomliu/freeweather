@@ -15,25 +15,25 @@ public class FWPicService implements IFWPicService{
 	VectorUtil vectorUtil;
 	
 	public String getIDWinfor(String value,String colorString,String title,String path) throws Exception {
-		String[] infor= value.split("b");
+		String[] infor= value.split(";");
 		List<double[]> list = new ArrayList<double[]>();
 		for(int i=0;i<infor.length;i++)
 		{
-			String[] temp=infor[i].split("c");
+			String[] temp=infor[i].split(",");
 			double[] temp1=new double[3];
 			temp1[0]=Double.parseDouble(temp[0]);
 			temp1[1]=Double.parseDouble(temp[1]);
 			temp1[2]=Double.parseDouble(temp[2]);
 			list.add(temp1);
 		}
-		String[] cs= colorString.split("b");
+		String[] cs= colorString.split(";");
 		String colorStringTemp="";
 		List<String> colorValue=new ArrayList<String>();
 		String firstCol="";
 		String lastCol="";
 		for(int i=0;i<cs.length;i++)
 		{
-			String[] temp=cs[i].split("c");
+			String[] temp=cs[i].split(",");
 			colorValue.add(temp[0]);
 			colorValue.add(temp[1]);
 			colorStringTemp=colorStringTemp+"#"+temp[2]+";";
