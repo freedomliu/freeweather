@@ -92,7 +92,7 @@ public class VectorUtil {
 	@Autowired
 	IAreaSizeBeansMapper areaSizeBeansMapper;
 	
-	public String getBufferedImageByDataList(List<double[]> list,
+	public String getBufferedImageByDataList(String area,List<double[]> list,
 			JSONObject configFile, String title, String mypath,
 			List<String> colorList, List<String> valueList) {
 		this.title = title;
@@ -101,14 +101,14 @@ public class VectorUtil {
 		this.configFile = configFile;
 		_provLines = new ArrayList<List<PointD>>();
 		_clipLines = new ArrayList<List<PointD>>();
-		String[] names = new String[] { "山东" };
+		String[] names = new String[] {area};
 		for (String name : names) {
 			// 行政边界内部区域
 			File aFile = new File(pathAreaLine + name + "_new.csv");
 
 			try {
 				if (aFile.exists()) {
-					ReadMapFile_WMP1(aFile, "Polygon");
+					ReadMapFile_WMP1(area,aFile, "Polygon");
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -264,10 +264,10 @@ public class VectorUtil {
 		}
 	}
 
-	public void ReadMapFile_WMP1(File aFile, String type)
+	public void ReadMapFile_WMP1(String areaName,File aFile, String type)
 			throws FileNotFoundException, IOException {
 		
-		AreaSizeBean area= areaSizeBeansMapper.selectByPrimaryKey("山东");
+		AreaSizeBean area= areaSizeBeansMapper.selectByPrimaryKey(areaName);
 		if(area!=null)
 		{
 			longitude_min = area.getLongitudeMin()-0.3;
@@ -360,7 +360,7 @@ public class VectorUtil {
 				}
 			}
 			AreaSizeBean areaSize=new AreaSizeBean();
-			areaSize.setAreaName("山东");
+			areaSize.setAreaName(areaName);
 			areaSize.setLatitudeMax(latitude_max);
 			areaSize.setLatitudeMin(latitude_min);
 			areaSize.setLongitudeMax(longitude_max);
@@ -587,14 +587,14 @@ public class VectorUtil {
 		g.drawString(title, wd, 31);
 		
 		
-		
+		/* 画内部点
 		font = new Font("宋体", Font.BOLD, 10);
 		g.setFont(font);
 		for(int i=0;i<_discreteData[0].length;i++)
 		{
 			int[] point = ToScreen(Double.valueOf(_discreteData[0][i]), Double.valueOf(_discreteData[1][i]));
 			g.drawString(_discreteData[2][i]+"", point[0], point[1]);
-		}
+		}*/
 		
 		
 		/*int[] point = ToScreen(Double.valueOf(118.12), Double.valueOf(37.12));

@@ -5,11 +5,11 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#" style="color: white;">freeWeather</a>
+      <a class="navbar-brand" href="javascript:void(0)" onclick="forwardPage('contentPage/first')" style="color: white;">freeWeather</a>
     </div>
     <div>
         <ul class="nav navbar-nav navbar-left">
-            <li class="dropdown">
+            <!-- <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     	菜单
                     <b class="caret"></b>
@@ -23,7 +23,8 @@
                     <li class="divider"></li>
                     <li><a href="#">功能1</a></li>
                 </ul>
-            </li>
+            </li> -->
+            <li><a href="javascript:void(0)" onclick="forwardPage('contentPage/show')">样例</a></li>
         </ul>
     </div>
     <ul class="nav navbar-nav navbar-right">

@@ -1,5 +1,7 @@
 package com.simple.freedom.common.aop;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +10,8 @@ import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+
+import org.springframework.context.ApplicationContext;
 
 import com.simple.freedom.beans.UserBean;
 
@@ -45,6 +49,17 @@ public class SingleSignOn implements HttpSessionListener{
 		{
 			sessionManage.remove((((UserBean)arg0.getSession().getAttribute(SysVariable.USERSESSION)).getUsername()));
 			arg0.getSession().removeAttribute(SysVariable.USERSESSION);
+		}
+		
+		Object fwImg= arg0.getSession().getAttribute("fwImg");
+		if(fwImg!=null)
+		{
+			String path= System.getProperty("user.dir");
+			for(String img :(ArrayList<String>)fwImg)
+			{
+				File file=new File(path+"/"+img);
+				file.delete();
+			}
 		}
 	}
 

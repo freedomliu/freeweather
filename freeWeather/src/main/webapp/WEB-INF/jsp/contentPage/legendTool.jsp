@@ -29,59 +29,62 @@
 </body>
 </html>
 <script>
-	debugger;
-	$('#colorpickerHolder').ColorPicker({flat: true});
-	
 	var c=document.getElementById("myCanvas");
 	var ctx=c.getContext("2d");
-	ctx.font="15px Arial";
+	$(function(){
+		$('#colorpickerHolder').ColorPicker({flat: true});
+		
+		
+		ctx.font="15px Arial";
+		
+		ctx.moveTo(10,70);
+		ctx.lineTo(790,70);
+		
+		var itemWidth=780/7;
+		ctx.fillText("1",itemWidth*1+5,30);
+		ctx.fillText("2",itemWidth*2+6,30);
+		ctx.fillText("3",itemWidth*3+6,30);
+		ctx.fillText("4",itemWidth*4+6,30);
+		ctx.fillText("5",itemWidth*5+6,30);
+		ctx.fillText("6",itemWidth*6+6,30);
+		
+		ctx.moveTo(itemWidth*1+10,70);
+		ctx.lineTo(itemWidth*1+10,40);
+		ctx.moveTo(itemWidth*2+10,70);
+		ctx.lineTo(itemWidth*2+10,40);
+		ctx.moveTo(itemWidth*3+10,70);
+		ctx.lineTo(itemWidth*3+10,40);
+		ctx.moveTo(itemWidth*4+10,70);
+		ctx.lineTo(itemWidth*4+10,40);
+		ctx.moveTo(itemWidth*5+10,70);
+		ctx.lineTo(itemWidth*5+10,40);
+		ctx.moveTo(itemWidth*6+10,70);
+		ctx.lineTo(itemWidth*6+10,40);
+		
+		ctx.fillStyle='#d1439d';
+		ctx.fillRect(10,50,itemWidth,20);
+		
+		ctx.fillStyle='#b043d1';
+		ctx.fillRect(itemWidth*1+10,50,itemWidth,20);
+		
+		ctx.fillStyle='#5b30c9';
+		ctx.fillRect(itemWidth*2+10,50,itemWidth,20);
+		
+		ctx.fillStyle='#3061c9';
+		ctx.fillRect(itemWidth*3+10,50,itemWidth,20);
+		
+		ctx.fillStyle='#30c9c4';
+		ctx.fillRect(itemWidth*4+10,50,itemWidth,20);
+		
+		ctx.fillStyle='#30c968';
+		ctx.fillRect(itemWidth*5+10,50,itemWidth,20);
+		
+		ctx.fillStyle='#9ec930';
+		ctx.fillRect(itemWidth*6+10,50,itemWidth,20);
+		
+		ctx.stroke();
+	});
 	
-	ctx.moveTo(10,70);
-	ctx.lineTo(790,70);
-	
-	var itemWidth=780/7;
-	ctx.fillText("1",itemWidth*1+5,30);
-	ctx.fillText("2",itemWidth*2+6,30);
-	ctx.fillText("3",itemWidth*3+6,30);
-	ctx.fillText("4",itemWidth*4+6,30);
-	ctx.fillText("5",itemWidth*5+6,30);
-	ctx.fillText("6",itemWidth*6+6,30);
-	
-	ctx.moveTo(itemWidth*1+10,70);
-	ctx.lineTo(itemWidth*1+10,40);
-	ctx.moveTo(itemWidth*2+10,70);
-	ctx.lineTo(itemWidth*2+10,40);
-	ctx.moveTo(itemWidth*3+10,70);
-	ctx.lineTo(itemWidth*3+10,40);
-	ctx.moveTo(itemWidth*4+10,70);
-	ctx.lineTo(itemWidth*4+10,40);
-	ctx.moveTo(itemWidth*5+10,70);
-	ctx.lineTo(itemWidth*5+10,40);
-	ctx.moveTo(itemWidth*6+10,70);
-	ctx.lineTo(itemWidth*6+10,40);
-	
-	ctx.fillStyle='#d1439d';
-	ctx.fillRect(10,50,itemWidth,20);
-	
-	ctx.fillStyle='#b043d1';
-	ctx.fillRect(itemWidth*1+10,50,itemWidth,20);
-	
-	ctx.fillStyle='#5b30c9';
-	ctx.fillRect(itemWidth*2+10,50,itemWidth,20);
-	
-	ctx.fillStyle='#3061c9';
-	ctx.fillRect(itemWidth*3+10,50,itemWidth,20);
-	
-	ctx.fillStyle='#30c9c4';
-	ctx.fillRect(itemWidth*4+10,50,itemWidth,20);
-	
-	ctx.fillStyle='#30c968';
-	ctx.fillRect(itemWidth*5+10,50,itemWidth,20);
-	
-	ctx.fillStyle='#9ec930';
-	ctx.fillRect(itemWidth*6+10,50,itemWidth,20);
-	
-	ctx.stroke();
 	
 	function getColorValue()
 	{
@@ -176,7 +179,7 @@
 			return false;
 		}
 		
-		var legend="~,"+sectionValueItem[0]+","+sectionValueItem[0];
+		var legend="~,"+sectionValueItem[0]+","+colorValueItem[0];
 		for(var i=0;i<sectionValueItem.length-1;i++)
 		{
 			legend=";"+sectionValueItem[i]+","+sectionValueItem[i+1]+","+colorValueItem[i+1];
@@ -184,7 +187,9 @@
 		legend=legend+";"+sectionValueItem[sectionValueItem.length-1]+",~"+colorValueItem[colorValueItem.length-1];
 		
 		$("#legend").val(legend);
-		
+		c.width="801";
+		c.width="800";
+		var ctx=c.getContext("2d");
 		ctx.clearRect(0,0,800,100);
 		ctx.font="15px Arial";
 		ctx.moveTo(10,70);
