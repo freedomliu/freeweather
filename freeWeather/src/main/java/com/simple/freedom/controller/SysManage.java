@@ -1,7 +1,5 @@
 package com.simple.freedom.controller;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.simple.freedom.common.aop.BaseController;
-import com.simple.freedom.common.aop.SysVariable;
 import com.simple.freedom.dao.ISysManageMapper;
 
 @Controller

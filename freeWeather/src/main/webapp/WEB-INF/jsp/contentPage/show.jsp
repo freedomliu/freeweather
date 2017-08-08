@@ -55,15 +55,18 @@
     </div>
 	<div class="col-sm-6 col-md-3">
         <a href="#" class="thumbnail">
-            <img src="image/show2.png"
-                 alt="色斑图样例">
+            <img src="image/show.png"
+                 alt="无法加载图片时的说明">
         </a>
 		 <div class="caption">
-                <h3>色斑图样例</h3>
-                <p>数据纯属虚构</p>
+                <h3>缩略图标签</h3>
+                <p>一些示例文本。一些示例文本。</p>
                 <p>
                     <a href="#" class="btn btn-primary" role="button">
-                        查看
+                        按钮
+                    </a>
+                    <a href="#" class="btn btn-default" role="button">
+                        按钮
                     </a>
                 </p>
             </div>

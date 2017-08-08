@@ -182,9 +182,9 @@
 		var legend="~,"+sectionValueItem[0]+","+colorValueItem[0];
 		for(var i=0;i<sectionValueItem.length-1;i++)
 		{
-			legend=";"+sectionValueItem[i]+","+sectionValueItem[i+1]+","+colorValueItem[i+1];
+			legend=legend+";"+sectionValueItem[i]+","+sectionValueItem[i+1]+","+colorValueItem[i+1];
 		}
-		legend=legend+";"+sectionValueItem[sectionValueItem.length-1]+",~"+colorValueItem[colorValueItem.length-1];
+		legend=legend+";"+sectionValueItem[sectionValueItem.length-1]+",~,"+colorValueItem[colorValueItem.length-1];
 		
 		$("#legend").val(legend);
 		c.width="801";

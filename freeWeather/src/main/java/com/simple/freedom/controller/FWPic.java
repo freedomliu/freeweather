@@ -41,7 +41,7 @@ public class FWPic extends BaseController{
 			url="http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/"+strUrl;
 			
 			// 把这个图片名称保存在用户session中  当其退出把其色斑图删除
-			Object fwImg= request.getAttribute("fwImg");
+			/*Object fwImg= request.getAttribute("fwImg");
 			if(fwImg!=null)
 			{
 				((ArrayList<String>)fwImg).add(strUrl);
@@ -52,10 +52,11 @@ public class FWPic extends BaseController{
 				List<String> imgList=new ArrayList<>();
 				imgList.add(strUrl);
 				request.setAttribute("fwImg", imgList);
-			}
+			}*/
 		}
 		catch(Exception e)
 		{
+			System.err.println(e);
 			logger.error(this.getClass() + ":" + e);
 			url="http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/"+"error.png";
 		}

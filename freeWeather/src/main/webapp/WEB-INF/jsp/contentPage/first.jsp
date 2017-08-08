@@ -84,7 +84,8 @@
 			<iframe style="width: 100%;height: 500px" seamless src="${pageContext.request.contextPath}/sys/forwardPage.do?pageName=contentPage/legendTool"></iframe>
 		</div>
 	</div>
-	<div style="width: 100%;text-align: center;">  	
+	<div style="width: 100%;text-align: center;">  
+		<img id="sbt"></img>	
 	</div>
 	</div>
 	</div>
@@ -133,8 +134,10 @@ function setCity(value)
 }
 function getPic()
 {
-	if(showModal(false))
+	debugger;
+	if(!showModal(false))
 	{
+		alert("数据校验不通过,请点击校验查看");
 		return false;
 	}
 	debugger;

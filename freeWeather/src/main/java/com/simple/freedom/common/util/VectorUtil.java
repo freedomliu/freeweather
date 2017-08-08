@@ -587,14 +587,14 @@ public class VectorUtil {
 		g.drawString(title, wd, 31);
 		
 		
-		/* 画内部点
+		// 画内部点
 		font = new Font("宋体", Font.BOLD, 10);
 		g.setFont(font);
 		for(int i=0;i<_discreteData[0].length;i++)
 		{
 			int[] point = ToScreen(Double.valueOf(_discreteData[0][i]), Double.valueOf(_discreteData[1][i]));
 			g.drawString(_discreteData[2][i]+"", point[0], point[1]);
-		}*/
+		}
 		
 		
 		/*int[] point = ToScreen(Double.valueOf(118.12), Double.valueOf(37.12));
