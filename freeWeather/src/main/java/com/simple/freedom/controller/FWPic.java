@@ -1,8 +1,6 @@
 package com.simple.freedom.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +23,7 @@ public class FWPic extends BaseController{
 	public String getFWPic(HttpServletRequest request,
 			HttpServletResponse response) throws IOException
 	{
+		
 		String url=null;
 		try
 		{			

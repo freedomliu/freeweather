@@ -10,10 +10,14 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -89,12 +93,16 @@ public class VectorUtil {
 	private boolean showLegend = false;
 	private String title = null;
 
+	//////
+	StringBuffer strSvg=null;
+	/////
 	@Autowired
 	IAreaSizeBeansMapper areaSizeBeansMapper;
 	
 	public String getBufferedImageByDataList(String area,List<double[]> list,
 			JSONObject configFile, String title, String mypath,
 			List<String> colorList, List<String> valueList) {
+		strSvg=new StringBuffer("<svg width=\"1080\" height=\"810\" xmlns=\"http://www.w3.org/2000/svg\"><g>");
 		this.title = title;
 		Format format = new SimpleDateFormat("yyyyMMddhhmmss");
 		String picName = format.format(new Date());
@@ -145,6 +153,21 @@ public class VectorUtil {
 			ImageIO.write(iamge, "PNG", new File(mypath + "/" + picName
 					+ ".png"));
 			System.out.println(mypath + "/" + picName + ".png");
+			//////////////////////
+			try
+			{
+				strSvg.append("</g></svg>");
+	            File file = new File(mypath + "/" + picName + ".svg");
+	            PrintStream ps = new PrintStream(new FileOutputStream(file));
+	            ps.println(strSvg.toString());
+	            ps.close();
+			}
+			catch(IOException e)
+			{
+			      e.printStackTrace();
+			}
+			//////////////////////
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("getBufferedImageByDataList类内部");
@@ -300,6 +323,7 @@ public class VectorUtil {
 						aPoint.X = Double.parseDouble(dataArray[0]);
 						aPoint.Y = Double.parseDouble(dataArray[1]);
 						cLine.add(aPoint);
+						
 					}
 					_provLines.add(cLine);
 				}
@@ -501,9 +525,11 @@ public class VectorUtil {
 		int len = aPolygon.OutLine.PointList.size();
 		GeneralPath drawPolygon = new GeneralPath(GeneralPath.WIND_EVEN_ODD,
 				len);
+		String tempStr="";
 		for (int j = 0; j < len; j++) {
 			aPoint = aPolygon.OutLine.PointList.get(j);
 			int[] sxy = ToScreen(aPoint.X, aPoint.Y);
+			tempStr+=(sxy[0]+","+sxy[1] +",");
 			if (j == 0) {
 				drawPolygon.moveTo(sxy[0], sxy[1]);
 			} else {
@@ -517,6 +543,7 @@ public class VectorUtil {
 				for (int j = 0; j < newPList.size(); j++) {
 					aPoint = newPList.get(j);
 					int[] sxy = ToScreen(aPoint.X, aPoint.Y);
+					tempStr+=(sxy[0]+","+sxy[1] +",");
 					if (j == 0) {
 						drawPolygon.moveTo(sxy[0], sxy[1]);
 					} else {
@@ -531,6 +558,7 @@ public class VectorUtil {
 		// 取消下边注释 则添加不用颜色边界线
 		// g.setColor(bColor);
 		g.draw(drawPolygon);
+		strSvg.append("<polygon stroke=\"none\" points=\""+tempStr.substring(0, tempStr.length()-1)+"\" fill=\""+toHexFromColor(aColor)+"\" />" );
 	}
 
 	private int[] ToScreen(double pX, double pY) {
@@ -622,16 +650,39 @@ public class VectorUtil {
 				int len = cLine.size();
 				int[] xPoints = new int[len];
 				int[] yPoints = new int[len];
+				String tempStr="";
 				for (int j = 0; j < len; j++) {
 					aPoint = cLine.get(j);
 					int[] sxy = ToScreen(aPoint.X, aPoint.Y);
 					xPoints[j] = sxy[0];
 					yPoints[j] = sxy[1];
+					tempStr+=(sxy[0]+","+sxy[1] +",");
 				}
+				strSvg.append("<polygon stroke=\"#1C86EE\" stroke-width=\"1\" stroke-linejoin=\"round\" points=\""+tempStr.substring(0, tempStr.length()-1)+"\" fill=\"none\" />" );
 				g.setColor(Color.black);
 				g.drawPolyline(xPoints, yPoints, len);
 
 			}
 		}
 	}
+	
+	 private String toHexFromColor(Color color){  
+	        String r,g,b;  
+	        StringBuilder su = new StringBuilder();  
+	        r = Integer.toHexString(color.getRed());  
+	        g = Integer.toHexString(color.getGreen());  
+	        b = Integer.toHexString(color.getBlue());  
+	        r = r.length() == 1 ? "0" + r : r;  
+	        g = g.length() ==1 ? "0" +g : g;  
+	        b = b.length() == 1 ? "0" + b : b;  
+	        r = r.toUpperCase();  
+	        g = g.toUpperCase();  
+	        b = b.toUpperCase();  
+	        su.append("#");  
+	        su.append(r);  
+	        su.append(g);  
+	        su.append(b);  
+	        //0xFF0000FF  
+	        return su.toString();  
+	    } 
 }
