@@ -1,6 +1,8 @@
 package com.simple.freedom.controller;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -60,5 +62,29 @@ public class FWPic extends BaseController{
 			url="http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/"+"error.png";
 		}
 		return url;
+	}
+	
+	@RequestMapping("getGaode")
+	@ResponseBody
+	public List<Map<String,String>> getGaode(HttpServletRequest request,
+			HttpServletResponse response) throws IOException
+	{
+		
+		List<Map<String,String>> result=null;
+		try
+		{			
+			String value= request.getParameter("zb");
+			String color= request.getParameter("legend");
+			String title= request.getParameter("title");
+			String area= request.getParameter("area");
+			String path= request.getRealPath("/");
+			result=fwPic.getGaode(area,value,color,title,path);
+
+		}
+		catch(Exception e)
+		{
+			System.err.println(e);
+		}
+		return result;
 	}
 }

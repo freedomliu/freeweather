@@ -68,6 +68,7 @@
 	<div class="btn-group" style="float: left;">
 		<button type="button" class="btn btn-primary" onclick="showModal(true)" data-toggle="modal">校验</button>
 		<button type="button" class="btn btn-primary" onclick="getPic()">生成</button>
+		<button type="button" class="btn btn-primary" onclick="gd()">gd</button>
 	</div>
 	</div>
 	<div class="col-sm-12 col-md-12" style="margin-top: 10px">
@@ -87,7 +88,8 @@
 		<div id="legendTool" class="collapse">
 			<iframe style="width: 100%;height: 500px" seamless src="${pageContext.request.contextPath}/sys/forwardPage.do?pageName=contentPage/legendTool"></iframe>
 		</div>
-	</div>
+		<iframe id="gdIframe" style="width: 100%;height: 700px" seamless src="${pageContext.request.contextPath}/sys/forwardPage.do?pageName=contentPage/gaode"></iframe>
+	 </div>
 	<div style="width: 100%;text-align: center;">  
 		<img id="sbt"></img>	
 	</div>
@@ -328,4 +330,18 @@ function showModal(show)
 	return isPass;
 }
 
+function gd()
+{
+	var area=$("#city").val();
+	if(area=="")
+	{
+		area=$("#pro").val();
+	}
+	if(area=="")
+	{
+		area=$("#country").val();
+	}
+	var param={"area":area,"title":$("#title").val(),"zb":$("#zb").val(),"legend":$("#legend").val()};
+	document.getElementById('gdIframe').contentWindow.gd(param);
+}
 </script>

@@ -113,6 +113,7 @@ public class VectorUtil {
 		for (String name : names) {
 			// 行政边界内部区域
 			File aFile = new File(pathAreaLine + name + "_new.csv");
+			//File aFile = new File("C:/fsConfig/areaGaode/" + name + "_all.csv");
 
 			try {
 				if (aFile.exists()) {
@@ -130,6 +131,7 @@ public class VectorUtil {
 			for (String name : names) {
 				// 获取底图信息
 				File file = new File(path + name + ".csv");
+				//File file = new File("C:/fsConfig/areaGaode/" + name + "_lunkuo.csv");
 				// 读取底图
 				this.ReadMapFile_WMP(file);
 			}
@@ -194,7 +196,7 @@ public class VectorUtil {
 		this.drawLegend(g2, colorList, valueList);
 		// 绘制内部线条
 		this.drawProvLines(g2);
-		this.darwCityName(g2);
+		//this.darwCityName(g2);
 	}
 
 	private double[] loadParameter() {
@@ -461,10 +463,10 @@ public class VectorUtil {
 	public void ClipPolygons() {
 		_clipContourPolygons = new ArrayList<wContour.Global.Polygon>();
 
-		int i = 2;
+		//int i = 2;
 
 		for (List<PointD> cLine : _clipLines) {
-			i = cLine.size() + ++i;
+			//i = cLine.size() + ++i;
 
 			List<wContour.Global.Polygon> list = Contour.clipPolygons(
 					_contourPolygons, cLine);
@@ -616,13 +618,13 @@ public class VectorUtil {
 		
 		
 		// 画内部点
-		font = new Font("宋体", Font.BOLD, 10);
+		/*font = new Font("宋体", Font.BOLD, 10);
 		g.setFont(font);
 		for(int i=0;i<_discreteData[0].length;i++)
 		{
 			int[] point = ToScreen(Double.valueOf(_discreteData[0][i]), Double.valueOf(_discreteData[1][i]));
 			g.drawString(_discreteData[2][i]+"", point[0], point[1]);
-		}
+		}*/
 		
 		
 		/*int[] point = ToScreen(Double.valueOf(118.12), Double.valueOf(37.12));

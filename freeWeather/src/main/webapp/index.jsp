@@ -61,8 +61,7 @@
 	
 	<div id="contentMain"></div>
 	
-	
-    <script src="js/three/three.min.js"></script>
+	<script src="js/three/three.min.js"></script>
    
     <script type="text/javascript">
     
