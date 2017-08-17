@@ -42,7 +42,8 @@
     </logger>  
   
     <root>  
-        <level value="DEBUG" />  
+        <level value="ERROR" />  
+        <!-- <level value="DEBUG" /> -->  
         <appender-ref ref="CONSOLE" />  
         <appender-ref ref="FILE" />  
     </root>  

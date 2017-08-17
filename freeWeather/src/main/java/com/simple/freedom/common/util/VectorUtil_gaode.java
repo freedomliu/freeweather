@@ -56,13 +56,10 @@ public class VectorUtil_gaode {
 	IAreaSizeBeansMapper areaSizeBeansMapper;
 	
 	public  List<Map<String,String>> getBufferedImageByDataList(String area,List<double[]> list,
-			JSONObject configFile, String title, String mypath,
+			JSONObject configFile,
 			List<String> colorList, List<String> valueList) {
 		result=new ArrayList<Map<String,String>>();
-		Format format = new SimpleDateFormat("yyyyMMddhhmmss");
-		String picName = format.format(new Date());
 		this.configFile = configFile;
-		//_provLines = new ArrayList<List<PointD>>();
 		_clipLines = new ArrayList<List<PointD>>();
 		String[] names = new String[] {area};
 		// 色差区间的数组
@@ -289,26 +286,26 @@ public class VectorUtil_gaode {
 		Color aColor = _colors[idx];
 		int len = aPolygon.OutLine.PointList.size();
 
-		String wai="";
+		StringBuilder wai=new StringBuilder();
 		for (int j = 0; j < len; j++) {
 			aPoint = aPolygon.OutLine.PointList.get(j);
-			wai+=(aPoint.X+", "+aPoint.Y+";");
+			wai.append(aPoint.X+", "+aPoint.Y+";");
 			//System.out.println("polygonArr.push(["+aPoint.X+", "+aPoint.Y+"]);");
 		}
 		Map<String,String> waiMap=new HashMap<String, String>();
-		waiMap.put("outer", wai);
-		String nei="";
+		waiMap.put("outer", wai.toString());
+		StringBuilder nei=new StringBuilder();
 		if (aPolygon.HasHoles()) {
 			for (int h = 0; h < aPolygon.HoleLines.size(); h++) {
 				List<PointD> newPList = aPolygon.HoleLines.get(h).PointList;
 				for (int j = 0; j < newPList.size(); j++) {
 					aPoint = newPList.get(j);
-					nei+=(aPoint.X+", "+aPoint.Y+";");
+					nei.append(aPoint.X+", "+aPoint.Y+";");
 					//System.out.println("polygonArr.push(["+aPoint.X+", "+aPoint.Y+"]);");
 				}
 			}
 		}
-		waiMap.put("inner", nei.equals("")?null:nei);
+		waiMap.put("inner", nei==null?null:nei.toString());
 		waiMap.put("color", toHexFromColor(aColor));
 		result.add(waiMap);
 	}

@@ -75,7 +75,7 @@ public class FWPicService implements IFWPicService{
 	    return pathStr;
 	}
 	
-	public List<Map<String,String>> getGaode(String area,String value,String colorString,String title,String path) throws Exception {
+	public List<Map<String,String>> getGaode(String area,String value,String colorString) throws Exception {
 		String[] infor= value.split(";");
 		List<double[]> list = new ArrayList<double[]>();
 		for(int i=0;i<infor.length;i++)
@@ -90,22 +90,12 @@ public class FWPicService implements IFWPicService{
 		String[] cs= colorString.split(";");
 		String colorStringTemp="";
 		List<String> colorValue=new ArrayList<String>();
-		String firstCol="";
-		String lastCol="";
 		for(int i=0;i<cs.length;i++)
 		{
 			String[] temp=cs[i].split(",");
 			colorValue.add(temp[0]);
 			colorValue.add(temp[1]);
 			colorStringTemp=colorStringTemp+"#"+temp[2]+";";
-			if(i==0)
-			{
-				firstCol=temp[2];
-			}
-			if(i==cs.length-1)
-			{
-				lastCol=temp[2];
-			}
 		}
 		List<String> tempList= new ArrayList<String>();  
 	    for(String i:colorValue){
@@ -127,7 +117,7 @@ public class FWPicService implements IFWPicService{
 	    jString=jString+"\"value\":\""+configValue+"\",";
 		jString=jString+"\"colorString\":\""+colorStringTemp+"\"}";
 		org.json.JSONObject jb=new org.json.JSONObject(jString);
-		List<Map<String,String>> pathStr= vectorUtil_gaode.getBufferedImageByDataList(area,list,jb,title,path,Arrays.asList(colorStringTemp.replaceAll("#", "").split(";")),Arrays.asList(strTemp.split(";")));
+		List<Map<String,String>> pathStr= vectorUtil_gaode.getBufferedImageByDataList(area,list,jb,Arrays.asList(colorStringTemp.replaceAll("#", "").split(";")),Arrays.asList(strTemp.split(";")));
 	    return pathStr;
 	}
 }

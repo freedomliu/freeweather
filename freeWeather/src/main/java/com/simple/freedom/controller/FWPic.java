@@ -75,10 +75,8 @@ public class FWPic extends BaseController{
 		{			
 			String value= request.getParameter("zb");
 			String color= request.getParameter("legend");
-			String title= request.getParameter("title");
 			String area= request.getParameter("area");
-			String path= request.getRealPath("/");
-			result=fwPic.getGaode(area,value,color,title,path);
+			result=fwPic.getGaode(area,value,color);
 
 		}
 		catch(Exception e)

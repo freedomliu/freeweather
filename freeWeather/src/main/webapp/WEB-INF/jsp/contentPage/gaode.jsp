@@ -80,7 +80,6 @@
     				        polygon.setPath(pathArray);
     				        map.setFitView();
 						});
-    				
     			});
     }
     </script>

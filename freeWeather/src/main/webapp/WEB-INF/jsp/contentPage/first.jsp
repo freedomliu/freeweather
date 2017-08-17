@@ -67,8 +67,8 @@
     </div>
 	<div class="btn-group" style="float: left;">
 		<button type="button" class="btn btn-primary" onclick="showModal(true)" data-toggle="modal">校验</button>
-		<button type="button" class="btn btn-primary" onclick="getPic()">生成</button>
-		<button type="button" class="btn btn-primary" onclick="gd()">gd</button>
+		<button type="button" class="btn btn-primary" onclick="getPic()">PNG</button>
+		<button type="button" class="btn btn-primary" onclick="gd()">地图</button>
 	</div>
 	</div>
 	<div class="col-sm-12 col-md-12" style="margin-top: 10px">
@@ -332,6 +332,13 @@ function showModal(show)
 
 function gd()
 {
+	debugger;
+	if(!showModal(false))
+	{
+		alert("数据校验不通过,请点击校验查看");
+		return false;
+	}
+	debugger;
 	var area=$("#city").val();
 	if(area=="")
 	{

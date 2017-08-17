@@ -1,139 +1,93 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
+<!-- 重点：loadAreaNode -->
+<!doctype html>
+<html lang="zh-CN">
+
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-  <style type="text/css">
-    body, html{width: 100%;height: 100%;margin:0;font-family:"微软雅黑";}
-    #allmap{height:100%;width:100%;}
-    #r-result{width:100%;}
-  </style>
- <script src="${pageContext.request.contextPath}/js/jquery/jquery-3.1.1.min.js"></script>
-  <title>添加/删除地面叠加层</title>
+    <!-- 原始地址：//webapi.amap.com/ui/1.0/ui/geo/DistrictExplorer/examples/simple-load.html -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>单区域加载</title>
+    <style>
+    html,
+    body,
+    #container {
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+    }
+    </style>
 </head>
+
 <body>
   <div id="allmap">
   </div>
+    <div id="container" tabindex="0"></div>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=49aa102a40ea3676f608dc7f96511298"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.js"></script>
+    <!-- UI组件库 1.0 -->
+    <script src="${pageContext.request.contextPath}/js/main.js"></script>
+    <script type="text/javascript">
+    //创建地图
+    var map = new AMap.Map('container', {
+        cursor: 'default',
+        zoom: 4
+    });
+
+    //just some colors
+    var colors = [
+        "#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00",
+        "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707",
+        "#651067", "#329262", "#5574a6", "#3b3eac"
+    ];
+
+    AMapUI.loadUI(['geo/DistrictExplorer'], function(DistrictExplorer) {
+
+        //创建一个实例
+        var districtExplorer = new DistrictExplorer({
+            map: map
+        });
+
+        
+        var adcode = 210200;
+
+        districtExplorer.loadAreaNode(adcode, function(error, areaNode) {
+
+		debugger;
+            //更新地图视野
+            map.setBounds(areaNode.getBounds(), null, null, true);
+
+            //清除已有的绘制内容
+            districtExplorer.clearFeaturePolygons();
+
+			var geometry= areaNode.getParentFeature().geometry;
+			var text="Polygon";
+			var coordinates = geometry.coordinates;
+			text+=(";"+coordinates.length);
+			for (var c = 0; c < coordinates.length;c++) 
+			{
+	             var coordinate = coordinates[c][0];
+				 text+=(";"+coordinate.length);
+				 for(var cc=0;cc<coordinate.length;cc++)
+				 {
+				 	text+=(";"+(coordinate[cc][0])+","+(coordinate[cc][1]));
+				 }
+			 }
+			 $("#allmap").html(text);
+			 console.log(text);
+            //绘制父区域
+            districtExplorer.renderParentFeature(areaNode, {
+                cursor: 'default',
+                bubble: true,
+                strokeColor: 'black', //线颜色
+                strokeOpacity: 1, //线透明度
+                strokeWeight: 1, //线宽
+                fillColor: null, //填充色
+                fillOpacity: 0.35, //填充透明度
+            });
+        });
+    });
+    </script>
 </body>
 
-<script>
-var text="Polygon"
-$.getJSON("json/china_all.json",function(data){
-	debugger;
-	// 轮廓
-	//decode(data)
-	// 所有
-	decode2(data)
-});
-
-function decode2(json) {
-    if (!json.UTF8Encoding) {
-        return json;
-    }
-    var features = json.features;
-
-    var num=0;
-    for (var f = 0; f < features.length; f++)
-    {
-    	var feature = features[f];
-        var geometry = feature.geometry;
-        var coordinates = geometry.coordinates;
-    	num+=coordinates.length;
-    }
-    text+=(";"+num);
-    
-    for (var f = 0; f < features.length; f++) {
-        var feature = features[f];
-        var geometry = feature.geometry;
-        var coordinates = geometry.coordinates;
-        var encodeOffsets = geometry.encodeOffsets;
-        for (var c = 0; c < coordinates.length; c++) {
-            var coordinate = coordinates[c];
-
-            if (geometry.type === 'Polygon') {
-                coordinates[c] = decodePolygon(
-                    coordinate,
-                    encodeOffsets[c]
-                );
-            }
-            else if (geometry.type === 'MultiPolygon') {
-                for (var c2 = 0; c2 < coordinate.length; c2++) {
-                    var polygon = coordinate[c2];
-                    coordinate[c2] = decodePolygon(
-                        polygon,
-                        encodeOffsets[c][c2]
-                    );
-                }
-            }
-        }
-    }
-    // Has been decoded
-    //json.UTF8Encoding = false;
-    //return json;
-    $("#allmap").html(text);
-}
-
-function decode(json) {
-    if (!json.UTF8Encoding) {
-        return json;
-    }
-    var features = json.features;
-
-    for (var f = 0; f < features.length; f++) {
-        var feature = features[f];
-        var geometry = feature.geometry;
-        var coordinates = geometry.coordinates;
-        var encodeOffsets = geometry.encodeOffsets;
-        text+=(";"+coordinates.length);
-        for (var c = 0; c < coordinates.length; c++) {
-            var coordinate = coordinates[c];
-
-            if (geometry.type === 'Polygon') {
-                coordinates[c] = decodePolygon(
-                    coordinate,
-                    encodeOffsets[c]
-                );
-            }
-            else if (geometry.type === 'MultiPolygon') {
-                for (var c2 = 0; c2 < coordinate.length; c2++) {
-                    var polygon = coordinate[c2];
-                    coordinate[c2] = decodePolygon(
-                        polygon,
-                        encodeOffsets[c][c2]
-                    );
-                }
-            }
-        }
-    }
-    // Has been decoded
-    //json.UTF8Encoding = false;
-    //return json;
-    $("#allmap").html(text);
-}
-function decodePolygon(coordinate, encodeOffsets) {
-    var result = [];
-    var prevX = encodeOffsets[0];
-    var prevY = encodeOffsets[1];
-    text+=(";"+coordinate.length/2);
-    for (var i = 0; i < coordinate.length; i += 2) {
-        var x = coordinate.charCodeAt(i) - 64;
-        var y = coordinate.charCodeAt(i + 1) - 64;
-        // ZigZag decoding
-        x = (x >> 1) ^ (-(x & 1));
-        y = (y >> 1) ^ (-(y & 1));
-        // Delta deocding
-        x += prevX;
-        y += prevY;
-
-        prevX = x;
-        prevY = y;
-        // Dequantize
-        //result.push([x / 1024, y / 1024]);
-        text+=(";"+(x / 1024)+","+(y / 1024));
-    }
-
-    //return result;
-}
-</script>
 </html>
