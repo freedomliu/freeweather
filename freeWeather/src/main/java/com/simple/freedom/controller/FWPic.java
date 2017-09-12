@@ -64,6 +64,37 @@ public class FWPic extends BaseController{
 		return url;
 	}
 	
+	@RequestMapping("getFWSvg")
+	@ResponseBody
+	public String getFWSvg(HttpServletRequest request,
+			HttpServletResponse response) throws IOException
+	{
+		
+		String url=null;
+		try
+		{			
+			String value= request.getParameter("zb");
+			String color= request.getParameter("legend");
+			String title= request.getParameter("title");
+			String area= request.getParameter("area");
+			String path= request.getRealPath("/");
+			String strUrl=fwPic.getSVGinfor(area,value,color,title,path);
+			if(strUrl.equals(""))
+			{
+				url="暂无生成的图片";
+			}
+			url="http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/"+strUrl;
+			
+		}
+		catch(Exception e)
+		{
+			System.err.println(e);
+			logger.error(this.getClass() + ":" + e);
+			url="http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/"+"error.png";
+		}
+		return url;
+	}
+	
 	@RequestMapping("getGaode")
 	@ResponseBody
 	public List<Map<String,String>> getGaode(HttpServletRequest request,
